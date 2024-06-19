@@ -1,6 +1,6 @@
 {
   "name": "@saplf/docx-templates",
-  "version": "4.13.0",
+  "version": "4.13.1",
   "description": "Template-based docx report creation. Hooks supplied version",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
