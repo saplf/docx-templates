@@ -1,7 +1,7 @@
 {
-  "name": "docx-templates",
+  "name": "@saplf/docx-templates",
   "version": "4.13.0",
-  "description": "Template-based docx report creation",
+  "description": "Template-based docx report creation. Hooks supplied version",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "author": "Guillermo Grau Panea",
@@ -14,13 +14,13 @@
     "report",
     "template"
   ],
-  "homepage": "https://github.com/guigrpa/docx-templates#readme",
+  "homepage": "https://github.com/saplf/docx-templates#readme",
   "bugs": {
-    "url": "https://github.com/guigrpa/docx-templates/issues"
+    "url": "https://github.com/saplf/docx-templates/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/guigrpa/docx-templates.git"
+    "url": "git+https://github.com/saplf/docx-templates.git"
   },
   "scripts": {
     "prepare": "yarn compile",
