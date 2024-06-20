@@ -1078,7 +1078,8 @@ const processImage = (ctx: Context, imagePars: ImagePars) => {
       ),
     ]),
   ]);
-  ctx.pendingImageNode = { image: drawing };
+  const image = imagePars.customPos ? imagePars.customPos(id, pic) : drawing;
+  ctx.pendingImageNode = { image };
   if (imagePars.caption) {
     ctx.pendingImageNode.caption = [
       node('w:br'),

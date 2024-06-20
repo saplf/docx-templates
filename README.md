@@ -1,4 +1,4 @@
-# Docx-templates [![Coverage Status](https://coveralls.io/repos/github/guigrpa/docx-templates/badge.svg?branch=master)](https://coveralls.io/github/guigrpa/docx-templates?branch=master) [![npm version](https://img.shields.io/npm/v/docx-templates.svg)](https://www.npmjs.com/package/docx-templates)
+# Docx-templates [![npm version](https://img.shields.io/npm/v/%40saplf%2Fdocx-templates.svg)](https://www.npmjs.com/package/@saplf/docx-templates)
 
 Template-based docx report creation for both Node and the browser. ([See the blog post](http://guigrpa.github.io/2017/01/01/word-docs-the-relay-way/)).
 
@@ -144,7 +144,7 @@ const report = await createReport({
 });
 ```
 
-Check out the [Node examples folder](https://github.com/guigrpa/docx-templates/tree/master/examples/example-node).
+Check out the [Node examples folder](https://github.com/saplf/docx-templates/tree/master/examples/example-node).
 
 # Deno usage
 You can use docx-templates in Deno! Just follow the Browser guide and import the polyfilled docx-templates bundle, for example from unpkg:
@@ -202,9 +202,9 @@ const readFileIntoArrayBuffer = fd =>
   });
 ```
 
-You can find an example implementation of `saveDataToFile()` [in the Webpack example](https://github.com/guigrpa/docx-templates/blob/79119723ff1c009b5bbdd28016558da9b405742f/examples/example-webpack/client/index.js#L82).
+You can find an example implementation of `saveDataToFile()` [in the Webpack example](https://github.com/saplf/docx-templates/blob/79119723ff1c009b5bbdd28016558da9b405742f/examples/example-webpack/client/index.js#L82).
 
-Check out the examples [using Webpack](https://github.com/guigrpa/docx-templates/tree/master/examples/example-webpack) and [using Browserify](https://github.com/guigrpa/docx-templates/tree/master/examples/example-browserify) or you can use the browserified bundle directly as discussed below.
+Check out the examples [using Webpack](https://github.com/saplf/docx-templates/tree/master/examples/example-webpack) and [using Browserify](https://github.com/saplf/docx-templates/tree/master/examples/example-browserify) or you can use the browserified bundle directly as discussed below.
 
 ## Polyfilled browser-ready bundle
 As this library depends on the internal NodeJS modules `vm`, `stream`, `util`, and `events`, your build tools have to polyfill these modules when using the library in the browser. We provide a browser build which includes the required polyfills. Its file size is about 300K uncompressed or 85K / 70K with gzip / brotli compression).
@@ -227,9 +227,9 @@ Note that you need to disable the sandbox mode using the `noSandbox: true` optio
 
 You can find several template examples in this repo:
 
-* [SWAPI](https://github.com/guigrpa/docx-templates/tree/master/examples/example-node), a good example of what you can achieve embedding a template (GraphQL in this case) in your report, including a simple script for report generation. Uses the freak-ish online [Star Wars GraphQL API](https://github.com/graphql/swapi-graphql).
-* [Dynamic images](https://github.com/guigrpa/docx-templates/tree/master/examples/example-node): with examples of images that are dynamically downloaded or created. Check out the _images-many-tiles_ example for a taste of this powerful feature.
-* Browser-based examples [using Webpack](https://github.com/guigrpa/docx-templates/tree/master/examples/example-webpack) and [using Browserify](https://github.com/guigrpa/docx-templates/tree/master/examples/example-browserify).
+* [SWAPI](https://github.com/saplf/docx-templates/tree/master/examples/example-node), a good example of what you can achieve embedding a template (GraphQL in this case) in your report, including a simple script for report generation. Uses the freak-ish online [Star Wars GraphQL API](https://github.com/graphql/swapi-graphql).
+* [Dynamic images](https://github.com/saplf/docx-templates/tree/master/examples/example-node): with examples of images that are dynamically downloaded or created. Check out the _images-many-tiles_ example for a taste of this powerful feature.
+* Browser-based examples [using Webpack](https://github.com/saplf/docx-templates/tree/master/examples/example-webpack) and [using Browserify](https://github.com/saplf/docx-templates/tree/master/examples/example-browserify).
 
 ## Custom command delimiters
 You can use different **left/right command delimiters** by passing an array to `cmdDelimiter`:
@@ -697,7 +697,7 @@ Obviously, this is less of an issue when running docx-templates in a browser env
 
 Regardless of whether you are using sandboxing or not (`noSandbox: true`), be aware that allowing users to upload arbitrary templates to be executed on your server poses a significant security threat. Use at your own risk.
 
-The library uses `require('vm')` as its default sandboxing environment. Note that this sandbox is explicitly [_not_ meant to be used as a security mechanism](https://nodejs.org/api/vm.html#vm_vm_executing_javascript). You can provide your own sandboxing environment if you want, as shown in [this example project](https://github.com/guigrpa/docx-templates/tree/master/examples/example-vm2).
+The library uses `require('vm')` as its default sandboxing environment. Note that this sandbox is explicitly [_not_ meant to be used as a security mechanism](https://nodejs.org/api/vm.html#vm_vm_executing_javascript). You can provide your own sandboxing environment if you want, as shown in [this example project](https://github.com/saplf/docx-templates/tree/master/examples/example-vm2).
 
 Note that turning off the sandbox (`noSandbox: true`) is known to give significant performance improvements when working with large templates or datasets. However, before you do this, make sure you are aware of the security implications.
 

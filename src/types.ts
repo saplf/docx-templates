@@ -2,6 +2,7 @@
 // Docx nodes
 
 import { QualifiedAttribute } from 'sax';
+import JSZip from 'jszip';
 
 // ==========================================
 export type Node = TextNode | NonTextNode;
@@ -40,6 +41,12 @@ type ErrorHandler = (e: Error, raw_code?: string) => any;
 type RunJSFunc = (o: { sandbox: SandBox; ctx: Context }) => {
   modifiedSandbox: SandBox;
   result: unknown;
+};
+
+export type HookHelper = {
+  parsePath: (zip: JSZip, xml_path: string) => Promise<NonTextNode>;
+
+  zip: JSZip;
 };
 
 export type UserOptions = {
@@ -127,6 +134,8 @@ export type UserOptions = {
    * (Default: 1,000,000)
    */
   maximumWalkingDepth?: number;
+
+  onZipped?: (helper: HookHelper) => void;
 };
 
 export type CreateReportOptions = {
@@ -258,6 +267,11 @@ export type ImagePars = {
    * Optional caption
    */
   caption?: string;
+
+  /**
+   * Optional position custom
+   */
+  customPos?: (id: string, pic: Node) => NonTextNode;
 };
 
 export type LinkPars = {

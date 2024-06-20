@@ -143,7 +143,7 @@ async function createReport(
   _probe?: 'JS' | 'XML'
 ): Promise<Node | string | Uint8Array> {
   logger.debug('Report options:', { attach: options });
-  const { template, data, queryVars } = options;
+  const { template, data, queryVars, onZipped } = options;
   const literalXmlDelimiter =
     options.literalXmlDelimiter || DEFAULT_LITERAL_XML_DELIMITER;
   const createOptions: CreateReportOptions = {
@@ -296,6 +296,8 @@ async function createReport(
     const finalContentTypesXml = buildXml(contentTypes, xmlOptions);
     zipSetText(zip, CONTENT_TYPES_PATH, finalContentTypesXml);
   }
+
+  onZipped?.({ parsePath, zip });
 
   logger.debug('Zipping...');
   const output = await zipSave(zip);
