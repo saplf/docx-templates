@@ -181,6 +181,7 @@ export type Context = {
   pendingHtmlNode?: TextNode | NonTextNode;
   htmlId: number;
   htmls: Htmls;
+  pendingRawNode?: Node;
   vars: { [name: string]: VarValue };
   loops: Array<LoopStatus>;
   fJump: boolean;
@@ -300,4 +301,5 @@ export const BUILT_IN_COMMANDS = [
   'IMAGE',
   'LINK',
   'HTML',
+  'RAW_NODE',
 ] as const;

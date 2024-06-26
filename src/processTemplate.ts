@@ -33,6 +33,7 @@ import {
   ObjectCommandResultError,
   IncompleteConditionalStatementError,
   UnterminatedForLoopError,
+  NullishCommandResultError,
 } from './errors';
 import { logger } from './debug';
 
@@ -202,10 +203,12 @@ export async function walkTemplate(
   ctx: Context,
   processor: CommandProcessor
 ): Promise<ReportOutput> {
+  type Move = 'JUMP' | 'DOWN' | 'UP' | 'SIDE' | undefined;
+
   const out: Node = cloneNodeWithoutChildren(template);
   let nodeIn: Node = template;
   let nodeOut: Node = out;
-  let move;
+  let move: Move;
   let deltaJump = 0;
   const errors: Error[] = [];
 
@@ -383,6 +386,23 @@ export async function walkTemplate(
           htmlNode._parent = parent;
           parent._children.pop();
           parent._children.push(htmlNode);
+
+          // Prevent containing paragraph or table row from being removed
+          ctx.buffers['w:p'].fInsertedText = true;
+          ctx.buffers['w:tr'].fInsertedText = true;
+          ctx.buffers['w:tc'].fInsertedText = true;
+        }
+        delete ctx.pendingHtmlNode;
+      }
+
+      // If a raw node was generated, replace the parent `w:p` node with it
+      if (ctx.pendingRawNode && !nodeOut._fTextNode && nodeOut._tag === 'w:p') {
+        const rawNode = ctx.pendingRawNode;
+        const parent = nodeOut._parent;
+        if (parent) {
+          rawNode._parent = parent;
+          parent._children.pop();
+          parent._children.push(rawNode);
 
           // Prevent containing paragraph or table row from being removed
           ctx.buffers['w:p'].fInsertedText = true;
@@ -713,6 +733,20 @@ const processCmd: CommandProcessor = async (
         if (html != null) await processHtml(ctx, html);
       }
 
+      // NODE <code>
+    } else if (cmdName === 'RAW_NODE') {
+      if (!isLoopExploring(ctx)) {
+        const node: Node | undefined = await runUserJsAndGetRaw(
+          data,
+          cmdRest,
+          ctx
+        );
+        if (!node) {
+          throw new NullishCommandResultError('RAW_NODE');
+        }
+        processRawNode(ctx, node);
+      }
+
       // Invalid command
     } else throw new CommandSyntaxError(cmd);
     return;
@@ -977,6 +1011,10 @@ function validateImagePars(pars: ImagePars) {
   validateImage(pars);
   if (pars.thumbnail) validateImage(pars.thumbnail);
 }
+
+const processRawNode = (ctx: Context, node: Node) => {
+  ctx.pendingRawNode = node;
+};
 
 const processImage = (ctx: Context, imagePars: ImagePars) => {
   validateImagePars(imagePars);
