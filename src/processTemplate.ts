@@ -409,7 +409,7 @@ export async function walkTemplate(
           ctx.buffers['w:tr'].fInsertedText = true;
           ctx.buffers['w:tc'].fInsertedText = true;
         }
-        delete ctx.pendingHtmlNode;
+        delete ctx.pendingRawNode;
       }
 
       // `w:tc` nodes shouldn't be left with no `w:p` or 'w:altChunk' children; if that's the
