@@ -267,7 +267,7 @@ export async function walkTemplate(
       move = 'UP';
     }
 
-    ctx.options.onVisit?.({ nodeIn, nodeOut, move });
+    ctx.options.onVisit?.({ nodeIn, nodeOut, move, ctx });
     logger.debug(
       `Next node [${move}, level ${ctx.level}]`,
       debugPrintNode(nodeIn)

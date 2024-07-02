@@ -55,6 +55,8 @@ type VisitorHelper = {
   nodeOut: Node;
 
   move: Move;
+
+  ctx: Context;
 };
 
 export type UserOptions = {
