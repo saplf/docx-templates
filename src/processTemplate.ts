@@ -23,6 +23,7 @@ import {
   BUILT_IN_COMMANDS,
   ImageExtensions,
   NonTextNode,
+  Move,
 } from './types';
 import {
   isError,
@@ -203,8 +204,6 @@ export async function walkTemplate(
   ctx: Context,
   processor: CommandProcessor
 ): Promise<ReportOutput> {
-  type Move = 'JUMP' | 'DOWN' | 'UP' | 'SIDE' | undefined;
-
   const out: Node = cloneNodeWithoutChildren(template);
   let nodeIn: Node = template;
   let nodeOut: Node = out;
@@ -268,6 +267,7 @@ export async function walkTemplate(
       move = 'UP';
     }
 
+    ctx.options.onVisit?.({ nodeIn, nodeOut, move });
     logger.debug(
       `Next node [${move}, level ${ctx.level}]`,
       debugPrintNode(nodeIn)

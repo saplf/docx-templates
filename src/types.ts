@@ -49,6 +49,14 @@ export type HookHelper = {
   zip: JSZip;
 };
 
+type VisitorHelper = {
+  nodeIn: Node;
+
+  nodeOut: Node;
+
+  move: Move;
+};
+
 export type UserOptions = {
   /**
    * Docx file template as a Uint8Array (or e.g. ArrayBuffer or NodeJS Buffer).
@@ -135,6 +143,11 @@ export type UserOptions = {
    */
   maximumWalkingDepth?: number;
 
+  onVisit?: (helper: VisitorHelper) => void;
+
+  /**
+   * invoke after zipped
+   */
   onZipped?: (helper: HookHelper) => void;
 };
 
@@ -151,6 +164,7 @@ export type CreateReportOptions = {
   fixSmartQuotes: boolean;
   processLineBreaksAsNewText: boolean;
   maximumWalkingDepth?: number;
+  onVisit?: (helper: VisitorHelper) => void;
 };
 
 export type SandBox = {
@@ -303,3 +317,5 @@ export const BUILT_IN_COMMANDS = [
   'HTML',
   'RAW_NODE',
 ] as const;
+
+export type Move = 'JUMP' | 'DOWN' | 'UP' | 'SIDE' | undefined;
