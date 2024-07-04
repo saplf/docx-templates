@@ -133,8 +133,22 @@ function iterateNode(node: Node, callback: IterateCallback) {
     if (direction === 'in') {
       if (currentNode._fTextNode) {
         callback({ type: 'text', node: currentNode });
-        ({ node: currentNode, cursor: currentCursor } = pool[pool.length - 1]);
-        direction = 'out';
+        const parent = pool[pool.length - 1];
+        if (parent) {
+          const sibling = parent.node._children[(currentCursor ?? -2) + 1];
+          if (sibling) {
+            currentNode = sibling;
+            currentCursor = currentCursor! + 1;
+            direction = 'in';
+          } else {
+            currentNode = parent.node;
+            currentCursor = parent.cursor;
+            direction = 'out';
+          }
+        } else {
+          currentNode = undefined;
+          currentCursor = undefined;
+        }
       } else {
         callback({ type: 'in', node: currentNode });
         pool.push({ node: currentNode, cursor: currentCursor || 0 });
