@@ -143,7 +143,7 @@ async function createReport(
   _probe?: 'JS' | 'XML'
 ): Promise<Node | string | Uint8Array> {
   logger.debug('Report options:', { attach: options });
-  const { template, data, queryVars, onZipped } = options;
+  const { template, data, queryVars, onBeforeZip } = options;
   const literalXmlDelimiter =
     options.literalXmlDelimiter || DEFAULT_LITERAL_XML_DELIMITER;
   const createOptions: CreateReportOptions = {
@@ -298,7 +298,10 @@ async function createReport(
     zipSetText(zip, CONTENT_TYPES_PATH, finalContentTypesXml);
   }
 
-  onZipped?.({ parsePath, zip });
+  const res = onBeforeZip?.({ parsePath, zip });
+  if (res instanceof Promise) {
+    await res;
+  }
 
   logger.debug('Zipping...');
   const output = await zipSave(zip);
@@ -587,5 +590,8 @@ const getCmdDelimiter = (
   if (typeof delimiter === 'string') return [delimiter, delimiter];
   return delimiter;
 };
+
+// eslint-disable-next-line import/no-unused-modules
+export { iterateNode } from './reportUtils';
 
 export default createReport;

@@ -150,7 +150,7 @@ export type UserOptions = {
   /**
    * invoke after zipped
    */
-  onZipped?: (helper: HookHelper) => void;
+  onBeforeZip?: (helper: HookHelper) => void | Promise<void>;
 };
 
 export type CreateReportOptions = {
@@ -321,3 +321,19 @@ export const BUILT_IN_COMMANDS = [
 ] as const;
 
 export type Move = 'JUMP' | 'DOWN' | 'UP' | 'SIDE' | undefined;
+
+type IterateTextNode = {
+  type: 'text';
+
+  node: TextNode;
+};
+
+type IterateNonTextNode = {
+  type: 'in' | 'out';
+
+  node: NonTextNode;
+};
+
+export type IterateCallback = (
+  context: IterateTextNode | IterateNonTextNode
+) => void;

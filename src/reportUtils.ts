@@ -1,4 +1,11 @@
-import { Node, TextNode, NonTextNode, Context, LoopStatus } from './types';
+import {
+  Node,
+  TextNode,
+  NonTextNode,
+  Context,
+  LoopStatus,
+  IterateCallback,
+} from './types';
 import { TemplateParseError } from './errors';
 import { logger } from './debug';
 
@@ -110,6 +117,57 @@ const logLoop = (loops: Array<LoopStatus>) => {
   );
 };
 
+function iterateNode(node: Node, callback: IterateCallback) {
+  type PoolItem = {
+    node: Node;
+    cursor: number;
+  };
+
+  type Direction = 'in' | 'out';
+  const pool: PoolItem[] = [];
+  let currentNode: Node | undefined = node;
+  let currentCursor: number | undefined = 0;
+  let direction: Direction = 'in';
+
+  do {
+    if (direction === 'in') {
+      if (currentNode._fTextNode) {
+        callback({ type: 'text', node: currentNode });
+        ({ node: currentNode, cursor: currentCursor } = pool[pool.length - 1]);
+        direction = 'out';
+      } else {
+        callback({ type: 'in', node: currentNode });
+        pool.push({ node: currentNode, cursor: currentCursor || 0 });
+        if (currentNode._children.length) {
+          currentNode = currentNode._children[0];
+          currentCursor = 0;
+        } else {
+          direction = 'out';
+        }
+      }
+    } else if (direction === 'out') {
+      ({ cursor: currentCursor, node: currentNode } = pool.pop()!);
+      callback({ type: 'out', node: currentNode as NonTextNode });
+      const parent = pool[pool.length - 1];
+      if (parent) {
+        const sibling = parent.node._children[(currentCursor ?? -2) + 1];
+        if (sibling) {
+          currentNode = sibling;
+          currentCursor = currentCursor! + 1;
+          direction = 'in';
+        } else {
+          currentNode = parent.node;
+          currentCursor = parent.cursor;
+          direction = 'out';
+        }
+      } else {
+        currentNode = undefined;
+        currentCursor = undefined;
+      }
+    }
+  } while (currentNode);
+}
+
 // ==========================================
 // Public API
 // ==========================================
@@ -123,4 +181,5 @@ export {
   getCurLoop,
   isLoopExploring,
   logLoop,
+  iterateNode,
 };
