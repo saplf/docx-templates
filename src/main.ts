@@ -591,7 +591,4 @@ const getCmdDelimiter = (
   return delimiter;
 };
 
-// eslint-disable-next-line import/no-unused-modules
-export { iterateNode } from './reportUtils';
-
 export default createReport;
